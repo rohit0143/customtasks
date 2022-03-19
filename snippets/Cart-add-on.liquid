@@ -1,0 +1,74 @@
+{% assign product = all_products['gift-product'] %}
+
+{% if cart.item_count > 0  %}
+
+{% assign variant_id = product.variants.first.id %}
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+
+<script>
+
+  $(document).ready(function(){
+
+    var cartTotal = {{cart.total_price | json}};
+
+    var cartItems = {{ cart.items | json }};
+
+    var qtyInTheCart = 0;
+
+    var cartUpdates = {};
+
+    for (var i=0; i<cartItems.length; i++) {
+
+      if ( cartItems[i].id === {{ variant_id }} ) {
+
+          qtyInTheCart = cartItems[i].quantity;
+
+          break;
+
+          }
+
+          }
+
+          if (( qtyInTheCart > 0 ) && (cartTotal <= 200000)) {
+		
+        cartUpdates = { {{ variant_id }}: 0 }
+
+      }
+
+      else if (( cartItems.length >= 1 ) && ( qtyInTheCart !== 1 ) && (cartTotal > 200000)) {
+		
+        cartUpdates = { {{ variant_id }}: 1 }
+
+      }
+
+        else {
+
+          return
+
+        }
+
+      var params = {
+
+        type: 'POST',
+
+        url: '/cart/update.js',
+
+        data: { updates: cartUpdates },
+
+        dataType: 'json',
+
+        success: function(stuff) {
+
+          window.location.href = '/cart';
+
+        }
+
+      };
+
+      $.ajax(params);
+
+    });
+
+</script>
+{% endif %}

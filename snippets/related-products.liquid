@@ -1,0 +1,27 @@
+<div class="related-products-wrapper" style="margin-top:25px;">
+  {%assign related_products = product.metafields.my_fields.related_product | split:','%}
+  {%if related_products.size > 0 %}
+  	<h3 style="text-align:center;margin-bottom: 65px;">Related Products:</h3>
+  {% for field in related_products %}
+  {% assign site_url = shop.url | append: "/products/" %}
+  {% assign relate_product_handle = field  %}
+  {% assign full_url = site_url | append: relate_product_handle %}
+  <a href = "{{full_url}}">
+    <div class = "related-product">
+      <div class = "related-product-image" >
+        <img src="{{all_products[relate_product_handle].featured_image|img_url: '250x250'}}">
+        <h5 class = "related-product-name" style="text-align:center">{{all_products[relate_product_handle].title}}</h5>
+        <h5 class = "related-product-price" style="text-align:center">{{all_products[relate_product_handle].price | money}}</h5>
+      </div>            
+    </div>
+  </a>
+  {% endfor %}
+  {%endif%}
+</div>
+
+<style>
+  .related-product{
+  	display:inline-flex;
+    justify-content: space-between;
+  }
+</style>
